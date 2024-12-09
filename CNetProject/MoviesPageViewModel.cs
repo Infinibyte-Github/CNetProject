@@ -6,6 +6,7 @@ public class MoviesPageViewModel : BaseViewModel
 {
     public ObservableCollection<Movie> Movies { get; set; }
     public ICommand AddMovieCommand { get; }
+    public ICommand OpenAddMovieFormCommand { get; }
 
     private Movie _selectedMovie;
     public Movie SelectedMovie
@@ -26,6 +27,7 @@ public class MoviesPageViewModel : BaseViewModel
     {
         Movies = new ObservableCollection<Movie>();
         AddMovieCommand = new Command(AddMovie);
+        OpenAddMovieFormCommand = new Command(OpenAddMovieForm);
     }
 
     private void AddMovie()
@@ -41,5 +43,13 @@ public class MoviesPageViewModel : BaseViewModel
                 $"Title: {SelectedMovie.Title}\nFormat: {SelectedMovie.Format}",
                 "OK");
         }
+    }
+    
+    private async void OpenAddMovieForm()
+    {
+        await Application.Current.MainPage.Navigation.PushModalAsync(new AddItemPage((title, format) =>
+        {
+            Movies.Add(new Movie { Title = title, Format = format });
+        }));
     }
 }

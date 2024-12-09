@@ -8,7 +8,7 @@
                FontSize="Large" 
                HorizontalOptions="Center"/>
 
-        <Button Text="Add Movie" Command="{Binding AddMovieCommand}"/>
+        <Button Text="Add Movie" Command="{Binding OpenAddMovieFormCommand}"/>
         <ListView ItemsSource="{Binding Movies}" SelectedItem="{Binding SelectedMovie, Mode=TwoWay}"
                   ItemSelected="OnMovieSelected">
             <ListView.ItemTemplate>
