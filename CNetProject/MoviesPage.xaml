@@ -9,7 +9,8 @@
                HorizontalOptions="Center"/>
 
         <Button Text="Add Movie" Command="{Binding AddMovieCommand}"/>
-        <ListView ItemsSource="{Binding Movies}">
+        <ListView ItemsSource="{Binding Movies}" SelectedItem="{Binding SelectedMovie, Mode=TwoWay}"
+                  ItemSelected="OnMovieSelected">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Title}" Detail="{Binding Format}" />

@@ -8,7 +8,8 @@
                FontSize="Large" 
                HorizontalOptions="Center"/>
         <Button Text="Add Book" Command="{Binding AddBookCommand}" CornerRadius="50" WidthRequest="65" HeightRequest="65"/>
-        <ListView ItemsSource="{Binding Books}">
+        <ListView ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedBook, Mode=TwoWay}"
+                  ItemSelected="OnBookSelected">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Title}" Detail="{Binding Format}" />

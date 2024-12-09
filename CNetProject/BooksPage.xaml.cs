@@ -13,4 +13,13 @@ public partial class BooksPage : ContentPage
         InitializeComponent();
         BindingContext = new BooksPageViewModel();
     }
+    
+    private void OnBookSelected(object sender, SelectedItemChangedEventArgs e)
+    {
+        if (e.SelectedItem != null)
+        {
+            // Reset the selected item to avoid repeated taps not firing
+            ((ListView)sender).SelectedItem = null;
+        }
+    }
 }
