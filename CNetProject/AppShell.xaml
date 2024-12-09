@@ -7,9 +7,10 @@
     Shell.FlyoutBehavior="Disabled"
     Title="CNetProject">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <ShellContent Title="Home" Icon="home.png" ContentTemplate="{DataTemplate local:MainPage}" />
+        <ShellContent Title="Movies" Icon="movies.png" ContentTemplate="{DataTemplate local:MoviesPage}" />
+        <ShellContent Title="Books" Icon="books.png" ContentTemplate="{DataTemplate local:BooksPage}" />
+    </TabBar>
 
 </Shell>

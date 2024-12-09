@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CNetProject.MoviesPage">
+    <StackLayout>
+        <Label Text="Movies Collection" 
+               FontSize="Large" 
+               HorizontalOptions="Center"/>
+
+        <Button Text="Add Movie" Command="{Binding AddMovieCommand}"/>
+        <ListView ItemsSource="{Binding Movies}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Title}" Detail="{Binding Format}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </StackLayout>
+</ContentPage>

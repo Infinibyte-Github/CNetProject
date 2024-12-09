@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CNetProject.BooksPage">
+    <StackLayout>
+        <Label Text="Books Collection" 
+               FontSize="Large" 
+               HorizontalOptions="Center"/>
+        <Button Text="Add Book" Command="{Binding AddBookCommand}" CornerRadius="50" WidthRequest="65" HeightRequest="65"/>
+        <ListView ItemsSource="{Binding Books}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Title}" Detail="{Binding Format}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <HorizontalStackLayout BackgroundColor="LightGray" Margin="20" Spacing="10" HorizontalOptions="Fill">
+            <Button Text="Add Book" Command="{Binding AddBookCommand}" CornerRadius="20" HorizontalOptions="CenterAndExpand"/>
+            <Button Text="Delete Book" Command="{Binding AddBookCommand}" CornerRadius="20" HorizontalOptions="CenterAndExpand"/>
+        </HorizontalStackLayout>
+    </StackLayout>
+    
+</ContentPage>
