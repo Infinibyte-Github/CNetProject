@@ -9,7 +9,20 @@
         <Entry Text="{Binding Title}" Placeholder="Enter the title" />
 
         <Label Text="Format" />
-        <Entry Text="{Binding Format}" Placeholder="Enter the format (e.g., Paperback, DVD)" />
+        <Picker ItemsSource="{Binding Formats}" SelectedItem="{Binding Format}" />
+
+        <!-- Conditional Fields -->
+        <Label Text="Director" IsVisible="{Binding IsMovie}" />
+        <Entry Text="{Binding Director}" Placeholder="Enter the director" IsVisible="{Binding IsMovie}" />
+
+        <Label Text="Release Year" IsVisible="{Binding IsMovie}" />
+        <Entry Text="{Binding ReleaseYear}" Placeholder="Enter the release year" IsVisible="{Binding IsMovie}" />
+
+        <Label Text="Author" IsVisible="{Binding IsBook}" />
+        <Entry Text="{Binding Author}" Placeholder="Enter the author" IsVisible="{Binding IsBook}" />
+
+        <Label Text="Pages" IsVisible="{Binding IsBook}" />
+        <Entry Text="{Binding Pages}" Placeholder="Enter the number of pages" IsVisible="{Binding IsBook}" />
 
         <Button Text="Save" Command="{Binding SaveCommand}" />
         <Button Text="Cancel" Command="{Binding CancelCommand}" />
