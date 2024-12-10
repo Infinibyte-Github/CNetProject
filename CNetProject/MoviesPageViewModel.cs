@@ -1,4 +1,6 @@
-﻿namespace CNetProject;
+﻿// MoviesPageViewModel.cs
+
+namespace CNetProject;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -32,7 +34,7 @@ public class MoviesPageViewModel : BaseViewModel
 
     private void AddMovie()
     {
-        Movies.Add(new Movie { Title = "New Movie", Format = "DVD" });
+        Movies.Add(new Movie { Title = "New Movie", Format = "DVD", Director = "Director", ReleaseYear = 2024 });
     }
 
     private async void ShowMovieDetails(Movie SelectedMovie)
