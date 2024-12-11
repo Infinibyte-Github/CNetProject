@@ -1,11 +1,16 @@
-﻿// MoviesPageViewModel.cs
+﻿using System.Collections.ObjectModel;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace CNetProject;
-using System.Collections.ObjectModel;
-using System.Windows.Input;
 
 public class MoviesPageViewModel : BaseViewModel
 {
+    private readonly HttpClient _httpClient = new HttpClient();
+    private const string ApiBaseUrl = "http://localhost:8080/api/movies";
+
     public ObservableCollection<Movie> Movies { get; set; }
     public ICommand AddMovieCommand { get; }
     public ICommand OpenAddMovieFormCommand { get; }
@@ -28,21 +33,41 @@ public class MoviesPageViewModel : BaseViewModel
     public MoviesPageViewModel()
     {
         Movies = new ObservableCollection<Movie>();
-        AddMovieCommand = new Command(AddMovie);
+        AddMovieCommand = new Command(async () => await FetchMovies());
         OpenAddMovieFormCommand = new Command(OpenAddMovieForm);
+
+        // Load movies from API when the page is loaded
+        FetchMovies();
     }
 
-    private void AddMovie()
+    private async Task FetchMovies()
     {
-        Movies.Add(new Movie { Title = "New Movie", Format = "DVD", Director = "Director", ReleaseYear = 2024 });
+        try
+        {
+            var moviesFromApi = await _httpClient.GetFromJsonAsync<List<Movie>>(ApiBaseUrl);
+            Movies.Clear();  // Clear the existing list
+            if (moviesFromApi != null)
+            {
+                foreach (var movie in moviesFromApi)
+                {
+                    Movies.Add(movie);  // Add all fetched movies to the ObservableCollection
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching movies: {ex.Message}");
+            await Application.Current.MainPage.DisplayAlert("Error", $"Failed to load movies: {ex.Message}", "OK");
+        }
     }
 
-    private async void ShowMovieDetails(Movie SelectedMovie)
+
+    private async void ShowMovieDetails(Movie selectedMovie)
     {
-        if (SelectedMovie != null)
+        if (selectedMovie != null)
         {
             bool result = await Application.Current.MainPage.DisplayAlert("Movie Details",
-                $"Title: {SelectedMovie.Title}\nFormat: {SelectedMovie.Format}",
+                $"Title: {selectedMovie.Title}\nFormat: {selectedMovie.Format}",
                 "Ok", "Delete");
 
             if (!result)
@@ -53,27 +78,60 @@ public class MoviesPageViewModel : BaseViewModel
 
                 if (confirmDelete)
                 {
-                    Console.WriteLine($"Deleting movie: {SelectedMovie.Title}");
-                    Movies.Remove(SelectedMovie);
+                    await DeleteMovie(selectedMovie);
                 }
             }
         }
     }
 
+    private async Task DeleteMovie(Movie movie)
+    {
+        try
+        {
+            var response = await _httpClient.DeleteAsync($"{ApiBaseUrl}/{movie.Title}");
+            if (response.IsSuccessStatusCode)
+            {
+                Movies.Remove(movie);
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("Error", "Failed to delete the movie.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error deleting movie: {ex.Message}");
+        }
+    }
+
     private async void OpenAddMovieForm()
     {
-        await Application.Current.MainPage.Navigation.PushModalAsync(new AddItemPage(true, movieObj =>
+        await Application.Current.MainPage.Navigation.PushModalAsync(new AddItemPage(true, async movieObj =>
         {
             if (movieObj is Movie movie)
             {
-                Movies.Add(new Movie
-                {
-                    Title = movie.Title,
-                    Format = movie.Format,
-                    Director = movie.Director,
-                    ReleaseYear = movie.ReleaseYear
-                });
+                await AddMovie(movie);
             }
         }));
+    }
+
+    private async Task AddMovie(Movie newMovie)
+    {
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync(ApiBaseUrl, newMovie);
+            if (response.IsSuccessStatusCode)
+            {
+                Movies.Add(newMovie);
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("Error", "Failed to add the movie.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error adding movie: {ex.Message}");
+        }
     }
 }
