@@ -9,13 +9,16 @@
                HorizontalOptions="Center"/>
 
         <Button Text="Add Movie" Command="{Binding OpenAddMovieFormCommand}"/>
-        <ListView ItemsSource="{Binding Movies}" SelectedItem="{Binding SelectedMovie, Mode=TwoWay}"
-                  ItemSelected="OnMovieSelected">
+        <ListView ItemsSource="{Binding Movies}" SelectedItem="{Binding SelectedMovie, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Title}" Detail="{Binding Format}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        
+        <Button Text="Edit Movie" Command="{Binding OpenEditMoviesFormCommand}" IsEnabled="{Binding IsMovieSelected}"/>
+        <Button Text="Delete Movie" Command="{Binding DeleteMovieCommand}" IsEnabled="{Binding IsMovieSelected}"/>
+        
     </StackLayout>
 </ContentPage>

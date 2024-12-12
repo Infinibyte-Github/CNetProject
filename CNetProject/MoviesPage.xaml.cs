@@ -13,13 +13,4 @@ public partial class MoviesPage : ContentPage
         InitializeComponent();
         BindingContext = new MoviesPageViewModel();
     }
-    
-    private void OnMovieSelected(object sender, SelectedItemChangedEventArgs e)
-    {
-        if (e.SelectedItem != null)
-        {
-            // Reset the selected item to avoid repeated taps not firing
-            ((ListView)sender).SelectedItem = null;
-        }
-    }
 }
