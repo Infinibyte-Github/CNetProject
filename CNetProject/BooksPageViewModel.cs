@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿// BooksPageViewModel.cs
+
+using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -66,6 +68,8 @@ public class BooksPageViewModel : BaseViewModel
                     Books.Add(book);  // Add all fetched books to the ObservableCollection
                 }
             }
+            // refresh the UI
+            OnPropertyChanged(nameof(Books));
         }
         catch (Exception ex)
         {
@@ -127,12 +131,43 @@ public class BooksPageViewModel : BaseViewModel
     
     private async void OpenEditBookForm()
     {
-        await Application.Current.MainPage.Navigation.PushModalAsync(new EditItemPage(false, async bookObj =>
+        if (SelectedBook == null)
         {
-            if (bookObj is Book book)
+            await Application.Current.MainPage.DisplayAlert("Warning", "Please select a book to edit.", "OK");
+            return;
+        }
+
+        string originalTitle = SelectedBook.Title; // Capture the original title
+
+        await Application.Current.MainPage.Navigation.PushModalAsync(new EditItemPage(false, updatedBook =>
+        {
+            if (updatedBook is Book editedBook)
             {
-                // await UpdateBook(book);
+                UpdateBook(editedBook, originalTitle); // Pass the original title
             }
-        }));
+        }, SelectedBook));
     }
+    
+    private async void UpdateBook(Book updatedBook, string originalTitle)
+    {
+        try
+        {
+            // Use the original title in the URL to update the book
+            var response = await _httpClient.PutAsJsonAsync($"{ApiBaseUrl}/{originalTitle}", updatedBook);
+            if (response.IsSuccessStatusCode)
+            {
+                await FetchBooks(); // Reload the collection from the API
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("Error", $"{response}", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error updating book: {ex.Message}");
+        }
+    }
+
+
 }

@@ -13,6 +13,7 @@ public class EditItemPageViewModel : BaseViewModel
     public string PageTitle => _isMovie ? "Edit Movie" : "Edit Book";
 
     // Common Fields
+    public string OriginalTitle { get; set; }
     public string Title { get; set; }
     public string Format { get; set; }
     public ObservableCollection<string> Formats { get; }
@@ -42,6 +43,25 @@ public class EditItemPageViewModel : BaseViewModel
 
         SaveCommand = new Command(Save);
         CancelCommand = new Command(async () => await Application.Current.MainPage.Navigation.PopModalAsync());
+    }
+    
+    public EditItemPageViewModel(bool isMovie, Action<object> onSave, Book book = null, Movie movie = null)
+        : this(isMovie, onSave)
+    {
+        if (book != null)
+        {
+            Title = book.Title;
+            Format = book.Format;
+            Author = book.Author;
+            Pages = book.Pages;
+        }
+        else if (movie != null)
+        {
+            Title = movie.Title;
+            Format = movie.Format;
+            Director = movie.Director;
+            ReleaseYear = movie.ReleaseYear;
+        }
     }
 
     private async void Save()

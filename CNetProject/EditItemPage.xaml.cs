@@ -8,9 +8,9 @@ namespace CNetProject;
 
 public partial class EditItemPage : ContentPage
 {
-    public EditItemPage(bool isMovie, Action<object> onSave)
+    public EditItemPage(bool isMovie, Action<object> onSave, Book selectedBook = null, Movie selectedMovie = null)
     {
         InitializeComponent();
-        BindingContext = new EditItemPageViewModel(isMovie, onSave);
+        BindingContext = new EditItemPageViewModel(isMovie, onSave, selectedBook, selectedMovie);
     }
 }
