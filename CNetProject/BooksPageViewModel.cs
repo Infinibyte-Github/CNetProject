@@ -12,8 +12,13 @@ public class BooksPageViewModel : BaseViewModel
     private const string ApiBaseUrl = "http://localhost:8080/api/books";
 
     public ObservableCollection<Book> Books { get; set; }
+    bool IsBookSelected { get; set; } = false;
     public ICommand AddBookCommand { get; }
     public ICommand OpenAddBooksFormCommand { get; }
+    
+    public ICommand DeleteBookCommand { get; }
+    
+    public ICommand OpenEditBooksFormCommand { get; }
 
     private Book _selectedBook;
     public Book SelectedBook
@@ -25,7 +30,7 @@ public class BooksPageViewModel : BaseViewModel
             {
                 _selectedBook = value;
                 OnPropertyChanged();
-                ShowBookDetails(_selectedBook);
+                IsBookSelected = true;
             }
         }
     }
@@ -35,6 +40,14 @@ public class BooksPageViewModel : BaseViewModel
         Books = new ObservableCollection<Book>();
         AddBookCommand = new Command(async () => await FetchBooks());
         OpenAddBooksFormCommand = new Command(OpenAddBookForm);
+        OpenEditBooksFormCommand = new Command(OpenEditBookForm);
+        DeleteBookCommand = new Command(async () =>
+        {
+            if (SelectedBook != null)
+            {
+                await DeleteBook(SelectedBook);
+            }
+        });
 
         // Load books from API when the page is loaded
         FetchBooks();
@@ -58,28 +71,6 @@ public class BooksPageViewModel : BaseViewModel
         {
             Console.WriteLine($"Error fetching books: {ex.Message}");
             await Application.Current.MainPage.DisplayAlert("Error", $"Failed to load books: {ex.Message}", "OK");
-        }
-    }
-
-    private async void ShowBookDetails(Book selectedBook)
-    {
-        if (selectedBook != null)
-        {
-            bool result = await Application.Current.MainPage.DisplayAlert("Book Details",
-                $"Title: {selectedBook.Title}\nFormat: {selectedBook.Format}",
-                "Ok", "Delete");
-
-            if (!result)
-            {
-                bool confirmDelete = await Application.Current.MainPage.DisplayAlert("Confirm Delete",
-                    "Are you sure you want to delete this book?",
-                    "Yes", "No");
-
-                if (confirmDelete)
-                {
-                    await DeleteBook(selectedBook);
-                }
-            }
         }
     }
 
@@ -132,5 +123,16 @@ public class BooksPageViewModel : BaseViewModel
         {
             Console.WriteLine($"Error adding book: {ex.Message}");
         }
+    }
+    
+    private async void OpenEditBookForm()
+    {
+        await Application.Current.MainPage.Navigation.PushModalAsync(new EditItemPage(false, async bookObj =>
+        {
+            if (bookObj is Book book)
+            {
+                // await UpdateBook(book);
+            }
+        }));
     }
 }

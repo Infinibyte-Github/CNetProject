@@ -9,14 +9,16 @@
                HorizontalOptions="Center"/>
     
         <Button Text="Add Book" Command="{Binding OpenAddBooksFormCommand}"/>
-        <ListView ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedBook, Mode=TwoWay}"
-                  ItemSelected="OnBookSelected">
+        <ListView ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedBook, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <TextCell Text="{Binding Title}" Detail="{Binding Format}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        
+        <Button Text="Edit Book" Command="{Binding OpenEditBooksFormCommand}" IsEnabled="{Binding IsBookSelected}"/>
+        <Button Text="Delete Book" Command="{Binding DeleteBookCommand}" IsEnabled="{Binding IsBookSelected}"/>
         
     </StackLayout>
     

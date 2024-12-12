@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CNetProject;
 
-public partial class BooksPage : ContentPage
+public partial class EditItemPage : ContentPage
 {
-    public BooksPage()
+    public EditItemPage(bool isMovie, Action<object> onSave)
     {
         InitializeComponent();
-        BindingContext = new BooksPageViewModel();
+        BindingContext = new AddItemPageViewModel(isMovie, onSave);
     }
 }
