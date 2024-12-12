@@ -11,6 +11,6 @@ public partial class EditItemPage : ContentPage
     public EditItemPage(bool isMovie, Action<object> onSave)
     {
         InitializeComponent();
-        BindingContext = new AddItemPageViewModel(isMovie, onSave);
+        BindingContext = new EditItemPageViewModel(isMovie, onSave);
     }
 }
