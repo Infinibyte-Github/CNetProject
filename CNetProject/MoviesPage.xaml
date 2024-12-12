@@ -25,8 +25,8 @@
             </Grid.ColumnDefinitions>       
             
             <Button Grid.Column="0" Text="Add" Command="{Binding OpenAddMoviesFormCommand}"/>
-            <Button Grid.Column="1" Text="Edit" Command="{Binding OpenEditMoviesFormCommand}" IsEnabled="{Binding IsMovieSelected}"/>
-            <Button Grid.Column="2" Text="Delete" Command="{Binding DeleteMovieCommand}" IsEnabled="{Binding IsMovieSelected}"/>
+            <Button Grid.Column="1" Text="Edit" Command="{Binding OpenEditMoviesFormCommand}"/>
+            <Button Grid.Column="2" Text="Delete" Command="{Binding DeleteMovieCommand}"/>
         </Grid>
         
     </StackLayout>

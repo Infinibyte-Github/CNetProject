@@ -14,7 +14,6 @@ public class BooksPageViewModel : BaseViewModel
     private const string ApiBaseUrl = "http://localhost:8080/api/books";
 
     public ObservableCollection<Book> Books { get; set; }
-    bool IsBookSelected { get; set; } = false;
     public ICommand AddBookCommand { get; }
     public ICommand OpenAddBooksFormCommand { get; }
     
@@ -32,7 +31,6 @@ public class BooksPageViewModel : BaseViewModel
             {
                 _selectedBook = value;
                 OnPropertyChanged();
-                IsBookSelected = true;
             }
         }
     }
@@ -43,13 +41,7 @@ public class BooksPageViewModel : BaseViewModel
         AddBookCommand = new Command(async () => await FetchBooks());
         OpenAddBooksFormCommand = new Command(OpenAddBookForm);
         OpenEditBooksFormCommand = new Command(OpenEditBookForm);
-        DeleteBookCommand = new Command(async () =>
-        {
-            if (SelectedBook != null)
-            {
-                await DeleteBook(SelectedBook);
-            }
-        });
+        DeleteBookCommand = new Command(async () => await DeleteBook(SelectedBook));
 
         // Load books from API when the page is loaded
         FetchBooks();
@@ -80,6 +72,11 @@ public class BooksPageViewModel : BaseViewModel
 
     private async Task DeleteBook(Book book)
     {
+        if (SelectedBook == null)
+        {
+            await Application.Current.MainPage.DisplayAlert("Warning", "Please select a book to delete.", "OK");
+            return;
+        }
         try
         {
             var response = await _httpClient.DeleteAsync($"{ApiBaseUrl}/{book.Title}");
@@ -137,13 +134,13 @@ public class BooksPageViewModel : BaseViewModel
             return;
         }
 
-        string originalTitle = SelectedBook.Title; // Capture the original title
+        string originalTitle = SelectedBook.Title;
 
         await Application.Current.MainPage.Navigation.PushModalAsync(new EditItemPage(false, updatedBook =>
         {
             if (updatedBook is Book editedBook)
             {
-                UpdateBook(editedBook, originalTitle); // Pass the original title
+                UpdateBook(editedBook, originalTitle);
             }
         }, SelectedBook));
     }
@@ -152,7 +149,6 @@ public class BooksPageViewModel : BaseViewModel
     {
         try
         {
-            // Use the original title in the URL to update the book
             var response = await _httpClient.PutAsJsonAsync($"{ApiBaseUrl}/{originalTitle}", updatedBook);
             if (response.IsSuccessStatusCode)
             {

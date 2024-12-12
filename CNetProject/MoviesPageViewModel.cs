@@ -14,7 +14,6 @@ public class MoviesPageViewModel : BaseViewModel
     private const string ApiBaseUrl = "http://localhost:8080/api/movies";
 
     public ObservableCollection<Movie> Movies { get; set; }
-    bool IsMovieSelected { get; set; } = false;
     public ICommand AddMovieCommand { get; }
     public ICommand OpenAddMoviesFormCommand { get; }
     
@@ -32,7 +31,6 @@ public class MoviesPageViewModel : BaseViewModel
             {
                 _selectedMovie = value;
                 OnPropertyChanged();
-                IsMovieSelected = true;
             }
         }
     }
@@ -43,13 +41,7 @@ public class MoviesPageViewModel : BaseViewModel
         AddMovieCommand = new Command(async () => await FetchMovies());
         OpenAddMoviesFormCommand = new Command(OpenAddMovieForm);
         OpenEditMoviesFormCommand = new Command(OpenEditMovieForm);
-        DeleteMovieCommand = new Command(async () =>
-        {
-            if (SelectedMovie != null)
-            {
-                await DeleteMovie(SelectedMovie);
-            }
-        });
+        DeleteMovieCommand = new Command(async () => await DeleteMovie(SelectedMovie));
 
         // Load movies from API when the page is loaded
         FetchMovies();
@@ -65,7 +57,7 @@ public class MoviesPageViewModel : BaseViewModel
             {
                 foreach (var movie in moviesFromApi)
                 {
-                    Movies.Add(movie);  // Add all fetched movies to the ObservableCollection
+                    Movies.Add(movie);
                 }
             }
             // refresh the UI
@@ -80,6 +72,11 @@ public class MoviesPageViewModel : BaseViewModel
 
     private async Task DeleteMovie(Movie movie)
     {
+        if (SelectedMovie == null)
+        {
+            await Application.Current.MainPage.DisplayAlert("Warning", "Please select a movie to delete.", "OK");
+            return;
+        }
         try
         {
             var response = await _httpClient.DeleteAsync($"{ApiBaseUrl}/{movie.Title}");
@@ -137,13 +134,13 @@ public class MoviesPageViewModel : BaseViewModel
             return;
         }
 
-        string originalTitle = SelectedMovie.Title; // Track the original title
+        string originalTitle = SelectedMovie.Title;
 
         await Application.Current.MainPage.Navigation.PushModalAsync(new EditItemPage(true, updatedMovie =>
         {
             if (updatedMovie is Movie movie)
             {
-                UpdateMovie(movie, originalTitle); // Pass the original title to update
+                UpdateMovie(movie, originalTitle);
             }
         }, null, SelectedMovie));
     }
@@ -152,7 +149,6 @@ public class MoviesPageViewModel : BaseViewModel
     {
         try
         {
-            // Use the original title in the URL to update the movie
             var response = await _httpClient.PutAsJsonAsync($"{ApiBaseUrl}/{originalTitle}", updatedMovie);
             if (response.IsSuccessStatusCode)
             {

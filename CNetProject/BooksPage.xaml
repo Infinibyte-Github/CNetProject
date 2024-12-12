@@ -25,8 +25,8 @@
             </Grid.ColumnDefinitions>       
             
             <Button Grid.Column="0" Text="Add" Command="{Binding OpenAddBooksFormCommand}"/>
-            <Button Grid.Column="1" Text="Edit" Command="{Binding OpenEditBooksFormCommand}" IsEnabled="{Binding IsBookSelected}"/>
-            <Button Grid.Column="2" Text="Delete" Command="{Binding DeleteBookCommand}" IsEnabled="{Binding IsBookSelected}"/>
+            <Button Grid.Column="1" Text="Edit" Command="{Binding OpenEditBooksFormCommand}"/>
+            <Button Grid.Column="2" Text="Delete" Command="{Binding DeleteBookCommand}"/>
         </Grid>
         
     </StackLayout>
