@@ -4,21 +4,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CNetProject.BooksPage">
     <StackLayout>
-        <Label Text="Books Collection" 
-               FontSize="Large" 
-               HorizontalOptions="Center"/>
-    
-        <Button Text="Add Book" Command="{Binding OpenAddBooksFormCommand}"/>
         <ListView ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedBook, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Title}" Detail="{Binding Format}" />
+                    <TextCell Text="{Binding Title}">
+                        <TextCell.Detail>
+                            <Binding Path="." Converter="{StaticResource BookDetailConverter}" />
+                        </TextCell.Detail>
+                    </TextCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
         
-        <Button Text="Edit Book" Command="{Binding OpenEditBooksFormCommand}" IsEnabled="{Binding IsBookSelected}"/>
-        <Button Text="Delete Book" Command="{Binding DeleteBookCommand}" IsEnabled="{Binding IsBookSelected}"/>
+        <Grid ColumnSpacing="10" HorizontalOptions="Fill" Margin="10">
+            <!-- Define the columns in the Grid -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>       
+            
+            <Button Grid.Column="0" Text="Add" Command="{Binding OpenAddBooksFormCommand}"/>
+            <Button Grid.Column="1" Text="Edit" Command="{Binding OpenEditBooksFormCommand}" IsEnabled="{Binding IsBookSelected}"/>
+            <Button Grid.Column="2" Text="Delete" Command="{Binding DeleteBookCommand}" IsEnabled="{Binding IsBookSelected}"/>
+        </Grid>
         
     </StackLayout>
     

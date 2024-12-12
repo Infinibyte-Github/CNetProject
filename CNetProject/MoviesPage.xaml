@@ -4,21 +4,30 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CNetProject.MoviesPage">
     <StackLayout>
-        <Label Text="Movies Collection" 
-               FontSize="Large" 
-               HorizontalOptions="Center"/>
-
-        <Button Text="Add Movie" Command="{Binding OpenAddMovieFormCommand}"/>
         <ListView ItemsSource="{Binding Movies}" SelectedItem="{Binding SelectedMovie, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Title}" Detail="{Binding Format}" />
+                    <TextCell Text="{Binding Title}">
+                        <TextCell.Detail>
+                            <Binding Path="." Converter="{StaticResource MovieDetailConverter}" />
+                        </TextCell.Detail>
+                    </TextCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
         
-        <Button Text="Edit Movie" Command="{Binding OpenEditMoviesFormCommand}" IsEnabled="{Binding IsMovieSelected}"/>
-        <Button Text="Delete Movie" Command="{Binding DeleteMovieCommand}" IsEnabled="{Binding IsMovieSelected}"/>
+        <Grid ColumnSpacing="10" HorizontalOptions="Fill" Margin="10">
+            <!-- Define the columns in the Grid -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>       
+            
+            <Button Grid.Column="0" Text="Add" Command="{Binding OpenAddMoviesFormCommand}"/>
+            <Button Grid.Column="1" Text="Edit" Command="{Binding OpenEditMoviesFormCommand}" IsEnabled="{Binding IsMovieSelected}"/>
+            <Button Grid.Column="2" Text="Delete" Command="{Binding DeleteMovieCommand}" IsEnabled="{Binding IsMovieSelected}"/>
+        </Grid>
         
     </StackLayout>
 </ContentPage>
