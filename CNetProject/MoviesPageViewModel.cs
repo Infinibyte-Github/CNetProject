@@ -11,7 +11,9 @@ namespace CNetProject;
 public class MoviesPageViewModel : BaseViewModel
 {
     private readonly HttpClient _httpClient = new HttpClient();
-    private const string ApiBaseUrl = "http://localhost:8080/api/movies";
+    public string ApiBaseUrl =>
+        DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.0.2:8080/api/movies" :
+            "http://localhost:8080/api/movies";
 
     public ObservableCollection<Movie> Movies { get; set; }
     public ICommand AddMovieCommand { get; }
