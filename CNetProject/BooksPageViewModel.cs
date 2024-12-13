@@ -12,9 +12,8 @@ public class BooksPageViewModel : BaseViewModel
 {
     private readonly HttpClient _httpClient = new HttpClient();
     public string ApiBaseUrl =>
-        DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.0.2:8080/api/books" :
+        DeviceInfo.Platform == DevicePlatform.Android ? "http://10.0.2.2:8080/api/books" :
             "http://localhost:8080/api/books";
-    
     public ObservableCollection<Book> Books { get; set; }
     public ICommand AddBookCommand { get; }
     public ICommand OpenAddBooksFormCommand { get; }
